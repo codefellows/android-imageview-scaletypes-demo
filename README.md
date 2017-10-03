@@ -2,6 +2,11 @@
 This app shows off all the different possible values for the `scaleType`
 attribute on an `ImageView`.
 
+Notice that setting `adjustViewBounds` to `true` eliminates extra padding
+that appears above or below images for certain scale types. (Note: the app
+actually restarts when `adjustViewBounds` is toggled to `false` because it
+must reset the `ImageView` to a clean slate.)
+
 For a quick visual reference refer to this webpage which shows off the
 scale types similarly: <https://robots.thoughtbot.com/android-imageview-scaletype-a-visual-guide>
 

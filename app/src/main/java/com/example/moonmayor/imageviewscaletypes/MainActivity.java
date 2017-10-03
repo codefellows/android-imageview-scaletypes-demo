@@ -1,5 +1,6 @@
 package com.example.moonmayor.imageviewscaletypes;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private String EXTRA_CURRENT_INDEX = "CURRENT_INDEX";
     private int currentImageIndex = 0;
     private int[] images = {
             R.drawable.cube_icon, R.drawable.cube_photo,
@@ -34,6 +36,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = this.getIntent();
+        if (intent != null && intent.getExtras() != null) {
+            // set the current index if the app was reloaded after setting adjustViewBounds to false.
+            Bundle extras = intent.getExtras();
+            currentImageIndex = extras.getInt(EXTRA_CURRENT_INDEX, 0);
+        }
 
         cycleImageButton = (Button) findViewById(R.id.cycleImageButton);
         toggleAdjustViewBounds = (ToggleButton) findViewById(R.id.toggleAdjustViewBounds);
@@ -58,9 +67,17 @@ public class MainActivity extends AppCompatActivity {
         toggleAdjustViewBounds.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-               for (ImageView imageView : imageViews) {
-                   imageView.setAdjustViewBounds(b);
-               }
+                if (b) {
+                    for (ImageView imageView : imageViews) {
+                        imageView.setAdjustViewBounds(b);
+                    }
+                } else {
+                    // setting adjustViewBounds back to false is ineffective.
+                    // simple restart the activity.
+                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                    intent.putExtra(EXTRA_CURRENT_INDEX, currentImageIndex);
+                    startActivity(intent);
+                }
             }
         });
     }
