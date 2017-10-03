@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     };
 
     Button cycleImageButton;
+    ToggleButton toggleAdjustViewBounds;
     private List<ImageView> imageViews;
     private int[] imageViewIds = {
             R.id.center, R.id.centerCrop, R.id.centerInside,
@@ -33,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         cycleImageButton = (Button) findViewById(R.id.cycleImageButton);
-        attachClickListener();
+        toggleAdjustViewBounds = (ToggleButton) findViewById(R.id.toggleAdjustViewBounds);
+        attachClickListeners();
 
         imageViews = new ArrayList<>();
         for (int id : imageViewIds) {
@@ -43,11 +47,20 @@ public class MainActivity extends AppCompatActivity {
         setImage();
     }
 
-    private void attachClickListener() {
+    private void attachClickListeners() {
         cycleImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cycleImage();
+            }
+        });
+
+        toggleAdjustViewBounds.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+               for (ImageView imageView : imageViews) {
+                   imageView.setAdjustViewBounds(b);
+               }
             }
         });
     }
